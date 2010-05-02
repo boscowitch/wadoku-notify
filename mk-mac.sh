@@ -1,2 +1,2 @@
 #!/bin/bash
-clang -Wno-unused-value -o wadoku-mac -framework Foundation -framework AppKit clip-mac.m db.c notify-mac.m sqlite3.c && ./wadoku-mac
+clang -Wno-unused-value -o bin/wadoku-mac -framework Foundation -framework AppKit src-mac/clipboard.m src/db.c src-mac/notify.m src/sqlite3.c && ./wadoku-mac
