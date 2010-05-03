@@ -19,17 +19,23 @@ void lookup(const char* str) {
 	old = malloc(strlen(str)+1);
 	strcpy(old,str);
 	//end ignore unchanged str
-	
-	//notify("test","test");
-	
+		
 	if(!db) {
 		int op = sqlite3_open_v2("wadoku.sqlite3",&db,SQLITE_OPEN_READONLY|SQLITE_OPEN_NOMUTEX,0);
 		if(op) {
-			notify("error","could not open db");
+			notify("sqlite3_open_v2",sqlite3_errmsg(db));
 		}
-		sqlite3_exec(db,"PRAGMA read_uncommitted = True;",0,0,0);
+		
+		op = sqlite3_exec(db,"PRAGMA read_uncommitted = True;",0,0,0);
+		if(op) {
+			notify("read_uncommitted",sqlite3_errmsg(db));
+		}
+		
 		const char* SQL = "select (japanese || ' ')|| reading,german from entries where japanese like ? order by LENGTH(japanese_stripped) asc limit 1";
-		sqlite3_prepare_v2(db,SQL,strlen(SQL),&stm,0);
+		op = sqlite3_prepare_v2(db,SQL,strlen(SQL),&stm,0);
+		if(op) {
+			notify("sqlite3_prepare_v2",sqlite3_errmsg(db));
+		}
 	}
 
 	char buffer[2048];
