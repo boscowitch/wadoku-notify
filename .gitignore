@@ -1,4 +1,5 @@
 bin/*
+!bin/.keep
 ._*
 *~
 .DS_Store
