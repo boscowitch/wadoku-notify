@@ -1,5 +1,5 @@
 #define WINDOWS_LEAN_AND_MEAN
-#include<Windows.h>
+#include<windows.h>
 
 void notify(const char* ctitle, const char* ctext) {
 	WCHAR btitle[1024];

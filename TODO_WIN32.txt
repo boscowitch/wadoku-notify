@@ -1,0 +1,10 @@
+-FINISH w32 notify popup
+	-fit label and popup size to text
+	-set correct position relative to resolution
+	-test under windows!!! (wine has some initial popup draw problems, popup only shown after switching to another virtual desktop and back)
+	-replace MessageBox with new popup
+	-switch to better font / size ect
+
+-Faster dict format or caching of SQL db file
+
+-Maby hook marked text globaly instead of clipboard

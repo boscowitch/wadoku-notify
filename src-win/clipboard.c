@@ -1,5 +1,9 @@
 #define WINDOWS_LEAN_AND_MEAN
-#include<Windows.h>
+#define _WIN32_WINNT 0x0500
+#define UNICODE
+
+#include<windows.h>
+#include<winuser.h>
 
 static HWND old;
 static HWND clipwin;
@@ -35,6 +39,7 @@ static void clipBoardUpdated() {
 }
 
 static long WINAPI wndproc (HWND w,UINT x,WPARAM y,LPARAM z) {
+	HBRUSH hBrushStatic = CreateSolidBrush(RGB(0,0,0));
 	if(x==WM_TASKBARCREATED) {
 		//explorer restarted, recreate systray icon
 		Shell_NotifyIcon(NIM_ADD,&niData);
@@ -62,6 +67,15 @@ static long WINAPI wndproc (HWND w,UINT x,WPARAM y,LPARAM z) {
 		else
 			SendMessage(old,x,y,z);
 		break;
+	case WM_CTLCOLORSTATIC: {
+		SetTextColor((HDC) y, RGB(255,255,255));
+		SetBkColor((HDC)y,RGB(0,0,0));
+		return (LRESULT) hBrushStatic;
+	}
+	/*case WM_SIZE: {
+		
+		break;
+	}*/
 	case WM_DESTROY:
 		ChangeClipboardChain(w,old);
 		break;
@@ -87,17 +101,91 @@ static long WINAPI wndproc (HWND w,UINT x,WPARAM y,LPARAM z) {
 	}
 }
 
+typedef BOOL (WINAPI * SLWAProc)(HWND hwnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags);
+
+static SLWAProc pSLWA = NULL;
+
+BOOL SetWindowTransparency (HWND hwnd)
+{
+   static short beenHere = FALSE;
+   
+   HMODULE  hUser32;
+
+   if (!pSLWA && !beenHere)  {
+      beenHere = TRUE;
+      hUser32 = GetModuleHandle (L"user32.dll");
+
+      pSLWA = (SLWAProc)GetProcAddress(hUser32, (char *)"SetLayeredWindowAttributes");
+
+   }
+   
+   if (!pSLWA)
+      return (FALSE);  // No support for translucent windows!
+
+   SetWindowLong (hwnd, GWL_EXSTYLE, GetWindowLong(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+
+   return (pSLWA(hwnd, 0, 200, 2));   // percent% alpha
+}
+
+
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
+
+//W32 notify TESTING CODE 
+	HWND       hWnd;
+	MSG        msg;
+	WNDCLASSEX wc = {0};
+
+	wc.cbSize        =  sizeof(WNDCLASSEX);
+    	wc.style         =  WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CS_SAVEBITS;//| WS_CLIPCHILDREN | WS_CLIPSIBLINGS ;//| CS_SAVEBITS | 0x00020000; //0x00020000 > win xp only drop shadow 
+    	wc.lpfnWndProc   =  wndproc;
+    	wc.cbClsExtra    =  0;
+    	wc.cbWndExtra    =  0;
+    	wc.hInstance     =  hInst;
+    	wc.hCursor       =  LoadCursor(NULL,IDC_ARROW);
+    	wc.hIcon         =  0;
+    	wc.hbrBackground =  (HBRUSH)GetStockObject(BLACK_BRUSH);
+    	wc.lpszClassName =  L"wadoku_notify";
+    	wc.lpszMenuName  =  L"wadoku_notify";
+    	wc.hIconSm       =  0;
+
+
+	if( RegisterClassEx(&wc) == 0)
+        	return 0;
+
+	hWnd = CreateWindow(L"wadoku_notify",
+                          L"wadoku_notify",
+                          WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CS_SAVEBITS, //| 0x00020000, after win xp only for drop shadow 
+                          100,
+                          100,
+                          300,
+                          200,
+                          NULL,
+                          NULL,
+                          hInst,
+                          NULL);
+	if( hWnd == NULL)
+		return 0;
+	
+	HWND label = CreateWindow(L"static",L"日本語",WS_CHILD|WS_VISIBLE | SS_LEFT,0,0,300,200,hWnd,(HMENU) 1,hInst,NULL);
+	
+	SetWindowTransparency(hWnd);
+	
+	ShowWindow(hWnd,d); 
+	UpdateWindow(hWnd);
+	
+	
+//TESTING END
+
 	WNDCLASS classy = {0};
-	const char* classname = "wadoku_notify_clipper";
+	LPCWSTR classname = L"wadoku_notify_clipper";
 	classy.lpszClassName=classname;
 	classy.hInstance=hInst;
 	classy.lpfnWndProc=wndproc;
 	ATOM x = RegisterClass(&classy);
 	
-	WM_TASKBARCREATED = RegisterWindowMessage("TaskbarCreated");
+	WM_TASKBARCREATED = RegisterWindowMessage(L"TaskbarCreated");
 	
-	clipwin = CreateWindow(classname,"aaa",WS_OVERLAPPEDWINDOW,0,0,0,0,0,0,hInst,0);
+	clipwin = CreateWindow(classname,L"aaa",WS_OVERLAPPEDWINDOW,0,0,0,0,0,0,hInst,0);
 	old = SetClipboardViewer(clipwin);
 	
 	//start setup systray icon
@@ -106,7 +194,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
     niData.uFlags = NIF_ICON|NIF_MESSAGE|NIF_TIP;
     niData.hIcon =
         (HICON)LoadImage( hInst,
-            "MAINICON",
+            L"MAINICON",
             IMAGE_ICON,
             GetSystemMetrics(SM_CXSMICON),
             GetSystemMetrics(SM_CYSMICON),
@@ -118,13 +206,14 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 	
 	//start popup menu
 	con = CreatePopupMenu();
-	AppendMenu(con,MF_STRING,ID_OPTIONS,"&Options");
+	AppendMenu(con,MF_STRING,ID_OPTIONS,L"&Options");
 	AppendMenu(con,MF_MENUBARBREAK,ID_SEP,NULL);
-	AppendMenu(con,MF_STRING,ID_EXIT,"E&xit");
+	AppendMenu(con,MF_STRING,ID_EXIT,L"E&xit");
 	//end popup menu
 	
 	MSG Msg;
 	while (GetMessage(&Msg,NULL,0,0)==TRUE) {
+		TranslateMessage(&Msg);
 		DispatchMessage(&Msg);
 	}
 	Shell_NotifyIcon(NIM_DELETE,&niData);

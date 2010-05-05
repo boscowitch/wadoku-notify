@@ -21,8 +21,8 @@ wadoku-notify-linux:
 wadoku-notify-win:
 	ln -sf ../src-win/icon.rc bin/icon.rc
 	ln -sf ../data/wadoku.ico bin/wadoku.ico
-	i386-mingw32-windres bin/icon.rc -O coff -o bin/icon.res
-	i386-mingw32-gcc -mwindows -o bin/wadoku.exe src-win/notify.c src/db.c src-win/clipboard.c bin/icon.res src/sqlite3.c -lgdi32
+	i486-mingw32-windres bin/icon.rc -O coff -o bin/icon.res
+	i486-mingw32-gcc -mwindows -o bin/wadoku.exe src-win/notify.c src/db.c src-win/clipboard.c bin/icon.res src/sqlite3.c -lgdi32 -luser32
 	ln -sf ../data/wadoku.sqlite3 bin/wadoku.sqlite3
 	rm -f bin/icon.rc bin/icon.res bin/wadoku.ico
 	
