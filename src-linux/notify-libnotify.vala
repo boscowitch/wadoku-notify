@@ -4,7 +4,6 @@ using Gtk;
 
 Notification not = null;
 
-<<<<<<< HEAD
 Gtk.Window window;
 Gtk.Label label;
 uint Timer;
