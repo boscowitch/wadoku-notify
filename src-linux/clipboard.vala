@@ -33,7 +33,34 @@ public class WadokuNotify : GLib.Object {
 
     public static int main(string[] args) {
     	Gtk.init(ref args);
-    	Notify.init("wadoku-notify");
+    	gtk = false;
+    	if (args[1] == "-gtk" ) {
+    		gtk = true;
+    		window = new Window (WindowType.POPUP);
+		window.skip_taskbar_hint = true;
+		window.skip_pager_hint = true;
+		window.can_focus = false;
+		window.move(Gdk.Screen.width() - 310, Gdk.Screen.height() - 250);
+		Gdk.Color color;
+		Gdk.Color.parse("black", out color);
+		window.modify_bg( Gtk.StateType.NORMAL,color);
+		window.border_width = 2;
+		window.opacity = 0.75f;
+		window.set_default_size(300,-1);
+		window.destroy.connect (Gtk.main_quit);
+		label = new Label("");
+		label.selectable = false;
+		label.set_line_wrap(true);
+		label.set_size_request(300,-1);
+		Gdk.Color fg_color;
+		Gdk.Color.parse("white",out fg_color);
+		label.modify_fg(StateType.NORMAL,fg_color);
+		window.add(label);
+		Timer = Timeout.add(5000,HideTimer);
+    	}
+    	else {
+    		Notify.init("wadoku-notify");
+    	}
     	clip = Clipboard.get(Gdk.Atom.intern ("PRIMARY", false));
     	Signal.connect(clip, "owner_change", clipboard_changed , null);
     	
