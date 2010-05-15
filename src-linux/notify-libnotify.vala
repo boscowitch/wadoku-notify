@@ -30,9 +30,7 @@ void notify(char * ctitle, char * ctext) {
 		Timer = Timeout.add(5000,HideTimer);
 		return;
 	}
-=======
-public void notify(char * ctitle, char * ctext) {
->>>>>>> 07c444a3b054ab68f7781226ed3e4101511af441
+
 	if(not!=null)
         	not.update((string)ctitle, (string)ctext, "./wadoku.png");
     	else
