@@ -73,7 +73,7 @@ static long WINAPI wndproc (HWND w,UINT x,WPARAM y,LPARAM z) {
 		return (LRESULT) hBrushStatic;
 	}
 	/*case WM_SIZE: {
-		
+
 		break;
 	}*/
 	case WM_DESTROY:
@@ -87,7 +87,7 @@ static long WINAPI wndproc (HWND w,UINT x,WPARAM y,LPARAM z) {
         		SetForegroundWindow(w);
         		TrackPopupMenu(con,TPM_LEFTALIGN | TPM_LEFTBUTTON,pt.x,pt.y,0,w,NULL);
         		break;
-        	}	
+        	}
         case WM_RBUTTONDOWN: {
         		POINT pt;
         		GetCursorPos(&pt);
@@ -108,7 +108,7 @@ static SLWAProc pSLWA = NULL;
 BOOL SetWindowTransparency (HWND hwnd)
 {
    static short beenHere = FALSE;
-   
+
    HMODULE  hUser32;
 
    if (!pSLWA && !beenHere)  {
@@ -118,7 +118,7 @@ BOOL SetWindowTransparency (HWND hwnd)
       pSLWA = (SLWAProc)GetProcAddress(hUser32, (char *)"SetLayeredWindowAttributes");
 
    }
-   
+
    if (!pSLWA)
       return (FALSE);  // No support for translucent windows!
 
@@ -130,13 +130,13 @@ BOOL SetWindowTransparency (HWND hwnd)
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 
-//W32 notify TESTING CODE 
+//W32 notify TESTING CODE
 	HWND       hWnd;
 	MSG        msg;
 	WNDCLASSEX wc = {0};
 
 	wc.cbSize        =  sizeof(WNDCLASSEX);
-    	wc.style         =  WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CS_SAVEBITS;//| WS_CLIPCHILDREN | WS_CLIPSIBLINGS ;//| CS_SAVEBITS | 0x00020000; //0x00020000 > win xp only drop shadow 
+    	wc.style         =  WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CS_SAVEBITS;//| WS_CLIPCHILDREN | WS_CLIPSIBLINGS ;//| CS_SAVEBITS | 0x00020000; //0x00020000 > win xp only drop shadow
     	wc.lpfnWndProc   =  wndproc;
     	wc.cbClsExtra    =  0;
     	wc.cbWndExtra    =  0;
@@ -154,7 +154,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 
 	hWnd = CreateWindow(L"wadoku_notify",
                           L"wadoku_notify",
-                          WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CS_SAVEBITS, //| 0x00020000, after win xp only for drop shadow 
+                          WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CS_SAVEBITS, //| 0x00020000, after win xp only for drop shadow
                           100,
                           100,
                           300,
@@ -165,15 +165,15 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
                           NULL);
 	if( hWnd == NULL)
 		return 0;
-	
-	HWND label = CreateWindow(L"static",L"日本語",WS_CHILD|WS_VISIBLE | SS_LEFT,0,0,300,200,hWnd,(HMENU) 1,hInst,NULL);
-	
+
+	HWND label = CreateWindow(L"static",L"日本語 lalalalala \n lalalalalalalalalalaalala",WS_CHILD|WS_VISIBLE | SS_LEFT,0,0,0,0,hWnd,(HMENU) 1,hInst,NULL);
+
 	SetWindowTransparency(hWnd);
-	
-	ShowWindow(hWnd,d); 
+
+	ShowWindow(hWnd,d);
 	UpdateWindow(hWnd);
-	
-	
+
+
 //TESTING END
 
 	WNDCLASS classy = {0};
@@ -182,12 +182,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 	classy.hInstance=hInst;
 	classy.lpfnWndProc=wndproc;
 	ATOM x = RegisterClass(&classy);
-	
+
 	WM_TASKBARCREATED = RegisterWindowMessage(L"TaskbarCreated");
-	
+
 	clipwin = CreateWindow(classname,L"aaa",WS_OVERLAPPEDWINDOW,0,0,0,0,0,0,hInst,0);
 	old = SetClipboardViewer(clipwin);
-	
+
 	//start setup systray icon
     niData.cbSize = sizeof(NOTIFYICONDATA);
     niData.uID = 101;
@@ -203,14 +203,20 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
     niData.uCallbackMessage = WM_APP;
     Shell_NotifyIcon(NIM_ADD,&niData);
     //end setup systray icon
-	
+
 	//start popup menu
 	con = CreatePopupMenu();
 	AppendMenu(con,MF_STRING,ID_OPTIONS,L"&Options");
 	AppendMenu(con,MF_MENUBARBREAK,ID_SEP,NULL);
 	AppendMenu(con,MF_STRING,ID_EXIT,L"E&xit");
 	//end popup menu
-	
+
+    LPRECT lpRect;
+    GetClientRect(label,lpRect);
+
+	SetWindowPos(hWnd,NULL, 0, 0, lpRect->right - lpRect->left, lpRect->bottom - lpRect->top, SWP_NOMOVE|SWP_NOZORDER);
+
+
 	MSG Msg;
 	while (GetMessage(&Msg,NULL,0,0)==TRUE) {
 		TranslateMessage(&Msg);
