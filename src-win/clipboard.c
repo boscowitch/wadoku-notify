@@ -4,6 +4,7 @@
 
 #include<windows.h>
 #include<winuser.h>
+#include<stdio.h>
 
 static HWND old;
 static HWND clipwin;
@@ -15,6 +16,9 @@ enum { ID_OPTIONS, ID_SEP, ID_EXIT };
 
 void lookup(const char* str);
 void notify(const char* title,const char* text);
+
+//TESTING CODE
+HWND       hWnd;
 
 static void clipBoardUpdated() {
 	if(OpenClipboard(clipwin)) {
@@ -71,6 +75,9 @@ static long WINAPI wndproc (HWND w,UINT x,WPARAM y,LPARAM z) {
 		SetTextColor((HDC) y, RGB(255,255,255));
 		SetBkColor((HDC)y,RGB(0,0,0));
 		return (LRESULT) hBrushStatic;
+	}
+	case WM_MOUSEMOVE: {
+        ShowWindow(hWnd,SW_HIDE);
 	}
 	/*case WM_SIZE: {
 
@@ -131,7 +138,7 @@ BOOL SetWindowTransparency (HWND hwnd)
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 
 //W32 notify TESTING CODE
-	HWND       hWnd;
+
 	MSG        msg;
 	WNDCLASSEX wc = {0};
 
@@ -152,16 +159,24 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 	if( RegisterClassEx(&wc) == 0)
         	return 0;
 
-    DWORD dwWidth = GetSystemMetrics(SM_CXBORDER);
-    DWORD dwHeight = GetSystemMetrics(SM_CYBORDER);
+    //DWORD dwWidth = GetSystemMetrics(SM_CXBORDER);
+    //DWORD dwHeight = GetSystemMetrics(SM_CYBORDER);
+
+    LPRECT drect = (RECT*) malloc(sizeof(RECT));
+    HWND desktop = GetDesktopWindow();
+    GetWindowRect(desktop, drect);
+    DWORD x_pos = (drect->right-drect->left)-300;
+    DWORD y_pos = (drect->bottom-drect->top)-250;
+    printf("%d",x_pos);
+    printf("%d",y_pos);
 
 	hWnd = CreateWindow(L"wadoku_notify",
                           L"wadoku_notify",
                           WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CS_SAVEBITS, //| 0x00020000, after win xp only for drop shadow
-                          dwWidth - 400,
-                          dwHeight - 400,
-                          300,
-                          200,
+                          x_pos,
+                          y_pos,
+                          30,
+                          20,
                           NULL,
                           NULL,
                           hInst,
@@ -175,7 +190,7 @@ LPWSTR strn = L"日本語 aaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaa aaaaaaaaa bbbbbbbbbb
 
 	LPRECT lRect = (LPRECT) malloc(sizeof(RECT));
 	lRect->left = 0;
-	lRect->right = 100;
+	lRect->right = 290;
 	lRect->top = 0;
 	lRect->bottom = 10;
 	HDC dc = GetDC(label);
@@ -190,7 +205,7 @@ LPWSTR strn = L"日本語 aaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaa aaaaaaaaa bbbbbbbbbb
 
     ShowWindow(hWnd,SW_SHOW);
     SetWindowPos(label,NULL, 0, 0, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_NOMOVE|SWP_NOZORDER);
-    SetWindowPos(hWnd,HWND_TOPMOST, dwWidth - 400, dwHeight - 400, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_SHOWWINDOW|SWP_NOZORDER); //|SWP_NOMOVE
+    SetWindowPos(hWnd,HWND_TOPMOST, x_pos, y_pos, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_SHOWWINDOW|SWP_NOZORDER); //|SWP_NOMOVE
 
 
 	//UpdateWindow(hWnd);
