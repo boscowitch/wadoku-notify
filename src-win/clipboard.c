@@ -1,10 +1,4 @@
-#define WINDOWS_LEAN_AND_MEAN
-#define _WIN32_WINNT 0x0500
-#define UNICODE
-
-#include<windows.h>
-#include<winuser.h>
-#include<stdio.h>
+#include"clipboard.h"
 
 static HWND old;
 static HWND clipwin;
@@ -17,8 +11,6 @@ enum { ID_OPTIONS, ID_SEP, ID_EXIT };
 void lookup(const char* str);
 void notify(const char* title,const char* text);
 
-//TESTING CODE
-HWND       hWnd;
 
 static void clipBoardUpdated() {
 	if(OpenClipboard(clipwin)) {
@@ -79,6 +71,16 @@ static long WINAPI wndproc (HWND w,UINT x,WPARAM y,LPARAM z) {
 	case WM_MOUSEMOVE: {
         ShowWindow(hWnd,SW_HIDE);
 	}
+	case WM_TIMER: {
+	    switch(y)
+	    {
+	        case TIMER_HIDE: {
+	            ShowWindow(hWnd,SW_HIDE);
+	            KillTimer(hWnd,TIMER_HIDE);
+                break;
+	        }
+	    }
+	}
 	/*case WM_SIZE: {
 
 		break;
@@ -137,9 +139,8 @@ BOOL SetWindowTransparency (HWND hwnd)
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 
-//W32 notify TESTING CODE
-
 	MSG        msg;
+
 	WNDCLASSEX wc = {0};
 
 	wc.cbSize        =  sizeof(WNDCLASSEX);
@@ -159,16 +160,18 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 	if( RegisterClassEx(&wc) == 0)
         	return 0;
 
-    //DWORD dwWidth = GetSystemMetrics(SM_CXBORDER);
-    //DWORD dwHeight = GetSystemMetrics(SM_CYBORDER);
 
+
+    //get desktop resolution
     LPRECT drect = (RECT*) malloc(sizeof(RECT));
     HWND desktop = GetDesktopWindow();
     GetWindowRect(desktop, drect);
-    DWORD x_pos = (drect->right-drect->left)-300;
-    DWORD y_pos = (drect->bottom-drect->top)-250;
-    printf("%d",x_pos);
-    printf("%d",y_pos);
+
+    //calculate x and y position cordinates for notification window
+    x_pos = (drect->right-drect->left)-300;
+    y_pos = (drect->bottom-drect->top)-250;
+
+    free(drect);
 
 	hWnd = CreateWindow(L"wadoku_notify",
                           L"wadoku_notify",
@@ -184,37 +187,26 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 	if( hWnd == NULL)
 		return 0;
 
-LPWSTR strn = L"日本語 aaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaa aaaaaaaaa bbbbbbbbbbbbb";
+	label = CreateWindow(L"static",L"",WS_CHILD | WS_VISIBLE | SS_LEFT,0,0,300,200,hWnd,(HMENU) 1,hInst,NULL);
 
-	HWND label = CreateWindow(L"static",strn,WS_CHILD | WS_VISIBLE | SS_LEFT,0,0,300,200,hWnd,(HMENU) 1,hInst,NULL);
-
-	LPRECT lRect = (LPRECT) malloc(sizeof(RECT));
+	lRect = (LPRECT) malloc(sizeof(RECT));
 	lRect->left = 0;
 	lRect->right = 290;
 	lRect->top = 0;
 	lRect->bottom = 10;
+
 	HDC dc = GetDC(label);
-
-	DrawTextEx(dc, strn,(int) wcslen(strn),lRect, DT_CALCRECT | DT_WORDBREAK ,NULL);
-
-
-
-
 
 	SetWindowTransparency(hWnd);
 
+    /*
+    DrawTextEx(dc, strn,(int) wcslen(strn),lRect, DT_CALCRECT | DT_WORDBREAK ,NULL);
     ShowWindow(hWnd,SW_SHOW);
     SetWindowPos(label,NULL, 0, 0, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_NOMOVE|SWP_NOZORDER);
     SetWindowPos(hWnd,HWND_TOPMOST, x_pos, y_pos, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_SHOWWINDOW|SWP_NOZORDER); //|SWP_NOMOVE
+    */
 
-
-	//UpdateWindow(hWnd);
-
-
-
-
-//TESTING END
-
+    //Tray icon
 	WNDCLASS classy = {0};
 	LPCWSTR classname = L"wadoku_notify_clipper";
 	classy.lpszClassName=classname;
@@ -243,18 +235,21 @@ LPWSTR strn = L"日本語 aaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaa aaaaaaaaa bbbbbbbbbb
     Shell_NotifyIcon(NIM_ADD,&niData);
     //end setup systray icon
 
-	//start popup menu
+	//start popup menu creation
 	con = CreatePopupMenu();
 	AppendMenu(con,MF_STRING,ID_OPTIONS,L"&Options");
 	AppendMenu(con,MF_MENUBARBREAK,ID_SEP,NULL);
 	AppendMenu(con,MF_STRING,ID_EXIT,L"E&xit");
-	//end popup menu
+	//end popup menu creation
 
+    //Start message event handling
 	MSG Msg;
 	while (GetMessage(&Msg,NULL,0,0)==TRUE) {
 		TranslateMessage(&Msg);
 		DispatchMessage(&Msg);
 	}
+
 	Shell_NotifyIcon(NIM_DELETE,&niData);
+
 	ExitProcess(0);
 }
