@@ -1,10 +1,7 @@
--FINISH w32 notify popup
-	-fit label and popup size to text
-	-set correct position relative to resolution
-	-test under windows!!! (wine has some initial popup draw problems, popup only shown after switching to another virtual desktop and back)
-	-replace MessageBox with new popup
-	-switch to better font / size ect
+-more windows testing in user condition (note for bugreports!)
+	-maby switch to better font
 
--Faster dict format or caching of SQL db file
+-Faster dict format or caching of SQL db file (add index to sqlite + generate new one ordereb by length of stipped field which would be smaller and faster)
+	-Maby loading of the whole database into a sqlite :memory: database to force the data into programm memory over the whole runtime (see ATTACH sql stmt)
 
--Maby hook marked text globaly instead of clipboard
+-NSIS installer for windumb users ;)

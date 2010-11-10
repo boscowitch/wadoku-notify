@@ -144,22 +144,21 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 	WNDCLASSEX wc = {0};
 
 	wc.cbSize        =  sizeof(WNDCLASSEX);
-    	wc.style         =  WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CS_SAVEBITS;//| WS_CLIPCHILDREN | WS_CLIPSIBLINGS ;//| CS_SAVEBITS | 0x00020000; //0x00020000 > win xp only drop shadow
+    	wc.style         =  CS_SAVEBITS;// | WS_CLIPCHILDREN | WS_CLIPSIBLINGS; // | CS_SAVEBITS;//| WS_CLIPCHILDREN | WS_CLIPSIBLINGS ;//| CS_SAVEBITS | 0x00020000; //0x00020000 > win xp only drop shadow
     	wc.lpfnWndProc   =  wndproc;
     	wc.cbClsExtra    =  0;
     	wc.cbWndExtra    =  0;
     	wc.hInstance     =  hInst;
     	wc.hCursor       =  LoadCursor(NULL,IDC_ARROW);
     	wc.hIcon         =  0;
-    	wc.hbrBackground =  (HBRUSH)GetStockObject(BLACK_BRUSH);
+    	wc.hbrBackground =  GetStockObject(BLACK_BRUSH);
     	wc.lpszClassName =  L"wadoku_notify";
-    	wc.lpszMenuName  =  L"wadoku_notify";
+    	wc.lpszMenuName  =  NULL;
     	wc.hIconSm       =  0;
 
 
-	if( RegisterClassEx(&wc) == 0)
-        	return 0;
-
+	if(!RegisterClassEx(&wc))
+	    return 0;
 
 
     //get desktop resolution
@@ -173,17 +172,18 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 
     free(drect);
 
-	hWnd = CreateWindow(L"wadoku_notify",
-                          L"wadoku_notify",
-                          WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CS_SAVEBITS, //| 0x00020000, after win xp only for drop shadow
-                          x_pos,
-                          y_pos,
-                          30,
-                          20,
-                          NULL,
-                          NULL,
-                          hInst,
-                          NULL);
+	hWnd = CreateWindowEx(WS_EX_TOOLWINDOW,
+                       L"wadoku_notify",
+                       L"Wadoku Notify",
+                       WS_POPUP,// | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, //| CS_SAVEBITS, //| 0x00020000, after win xp only for drop shadow
+                       x_pos,
+                       y_pos,
+                       30,
+                       20,
+                       NULL,
+                       NULL,
+                       hInst,
+                       NULL);
 	if( hWnd == NULL)
 		return 0;
 
@@ -203,8 +203,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
     DrawTextEx(dc, strn,(int) wcslen(strn),lRect, DT_CALCRECT | DT_WORDBREAK ,NULL);
     ShowWindow(hWnd,SW_SHOW);
     SetWindowPos(label,NULL, 0, 0, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_NOMOVE|SWP_NOZORDER);
-    SetWindowPos(hWnd,HWND_TOPMOST, x_pos, y_pos, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_SHOWWINDOW|SWP_NOZORDER); //|SWP_NOMOVE
+    SetWindowPos(hWnd,HWND_TOPMOST, x_pos, y_pos, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_SHOWWINDOW); //|SWP_NOMOVE
     */
+
 
     //Tray icon
 	WNDCLASS classy = {0};
