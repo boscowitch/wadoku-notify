@@ -4,4 +4,4 @@
 -Use KVO registering (Registering for Key-Value Observing) obersver(eventlike) instead of polling the clipboard (saves CPU and app is faster/more responsive
 	-see KVO: http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/KeyValueObserving/Concepts/KVOBasics.html#//apple_ref/doc/uid/20002252-BAJEAIEE
 
--also same as in WIN32 TODO (sqlite index + into :memory: see TODO_WIN32.txt
+-also same as in WIN32 TODO (sqlite index + smaller db see TODO_WIN32.txt)

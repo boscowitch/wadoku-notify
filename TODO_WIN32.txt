@@ -1,7 +1,6 @@
--more windows testing in user condition (note for bugreports!)
-	-maby switch to better font
+-more windows testing in user condition (get bugreports!)
+	-better font !
 
--Faster dict format or caching of SQL db file (add index to sqlite + generate new one ordereb by length of stipped field which would be smaller and faster)
-	-Maby loading of the whole database into a sqlite :memory: database to force the data into programm memory over the whole runtime (see ATTACH sql stmt)
+-Faster dict format  (add index to sqlite if possible + generate new db ordereb by length of stipped field which would be smaller and faster)
 
--NSIS installer for windumb users ;)
+-maybe make nsis instale rnicer with images 
