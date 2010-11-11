@@ -5,6 +5,9 @@ Name "Wadoku Notify"
 OutFile "wadoku_notify_installer.exe"
 InstallDir $PROGRAMFILES\WadokuNotify
 
+!define MUI_HEADERIMAGE 
+!define MUI_HEADERIMAGE_BITMAP "data\wadoku.png"  
+
 ;Show all languages, despite user's codepage
   !define MUI_LANGDLL_ALLLANGUAGES
   
@@ -40,9 +43,10 @@ Section "Install"
  CreateShortCut "$SMPROGRAMS\WadokuNotify\WadokuNotify.lnk" "$INSTDIR\wadoku.exe" "" "$INSTDIR\wadoku.exe" 0
  CreateShortCut "$SMPROGRAMS\WadokuNotify\WadokuNotify Uninstaller.lnk" "$INSTDIR\uninstall.exe" "" "$SMPROGRAMS\WadokuNotify\WadokuNotify.lnk" 0
  ; write uninstall strings
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BigNSISTest" "DisplayName" "WadokuNotify (remove only)"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BigNSISTest" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "WadokuNotify" "$INSTDIR\wadoku.exe"
+ WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BigNSISTest" "DisplayName" "WadokuNotify (remove only)"
+ WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BigNSISTest" "UninstallString" '"$INSTDIR\uninstall.exe"'
+ ;working directory not working with regkey WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "WadokuNotify" "$INSTDIR\wadoku.exe"
+ CreateShortCut "$SMSTARTUP\WadokuNotify.lnk" "$INSTDIR\wadoku.exe" 
 SectionEnd
 
 
@@ -51,8 +55,9 @@ Section "Uninstall"
  RMDir /r "$INSTDIR"
  Delete "$SMPROGRAMS\WadokuNotify\WadokuNotify.lnk"
  Delete "$SMPROGRAMS\WadokuNotify\uninstall.lnk"
+ Delete "$SMSTARTUP\WadokuNotify.lnk"
  RMDir "$SMPROGRAMS\WadokuNotify"
- DeleteRegValue HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "WadokuNotify"
+ ;DeleteRegValue HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "WadokuNotify"
 SectionEnd
 
 Function un.onInit

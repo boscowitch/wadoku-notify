@@ -13,6 +13,7 @@ void notify(const char* ctitle, const char* ctext) {
 
 	HDC dc = GetDC(label);
 
+	lRect->right = 290;
 	DrawTextEx(dc, content,(int) wcslen(content),lRect, DT_CALCRECT | DT_WORDBREAK ,NULL);
 
 	ShowWindow(hWnd,SW_SHOW);
