@@ -7,6 +7,7 @@ InstallDir $PROGRAMFILES\WadokuNotify
 
 !define MUI_HEADERIMAGE 
 !define MUI_HEADERIMAGE_BITMAP "data\wadoku.png"  
+!define MUI_ICON "data\wadoku.ico"
 
 ;Show all languages, despite user's codepage
   !define MUI_LANGDLL_ALLLANGUAGES
