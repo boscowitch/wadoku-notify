@@ -28,7 +28,8 @@ public class WadokuNotify : GLib.Object {
     public static void clipboard_changed() {
     	text = clip.wait_for_text();
     	if(text != null) {
-    		lookup(text);
+    		if( (text.get_char() >=  0x4E00 && text.get_char() <= 0x9FAF) ||  (text.get_char() >=  0x30A0  && text.get_char() <= 0x30FF) || (text.get_char() >= 0x3040 && text.get_char() <= 0x309F) )
+    			lookup(text);
     	}
     }
 

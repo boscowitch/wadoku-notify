@@ -49,25 +49,27 @@ void lookup(const char* str) {
 	old = malloc(strlen(str)+1);
 	strcpy(old,str);
 	//end ignore unchanged str
-		
+	
 	int op=0;
-				
+		
 	const char* SQL = "select (japanese || ' ')|| reading,german from ram where japanese like ? order by LENGTH(japanese_stripped) asc limit 1";
 	op = sqlite3_prepare_v2(db,SQL,strlen(SQL),&stm,0);
 	if(op) {
 		notify("sqlite3_prepare_v2",sqlite3_errmsg(db));
 	}
-	
+
 
 	char buffer[2048];
 	sprintf(buffer,"%%%s%%",str);
 	sqlite3_bind_text(stm,1,buffer,-1,SQLITE_STATIC);
 	int res = sqlite3_step(stm);
-	
+
 	if(res==SQLITE_ROW) {
 		const char* title = (const char*)sqlite3_column_text(stm,0);
 		const char* text = (const char*)sqlite3_column_text(stm,1);
 		notify(title,text);
 	}
+	
 	sqlite3_reset(stm);
+	
 }
