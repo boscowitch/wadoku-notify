@@ -1,3 +1,8 @@
+ifndef ${prefix}
+prefix=/usr
+endif
+
+
 all:wadoku-notify-linux
 win:wadoku-notify-win
 mac:wadoku-notify-mac
@@ -31,5 +36,15 @@ wadoku-notify-mac:
 	ln -sf ../data/wadoku.sqlite3 bin/wadoku.sqlite3
 	ln -sf ../data/wadoku.png bin/wadoku.png
 	
+install:all
+	mkdir -p ${prefix}/bin
+	rm -f ${prefix}/bin/wadoku-notify
+	mkdir -p ${prefix}/share
+	mkdir -p ${prefix}/share/wadoku-notify
+	cp bin/wadoku-notify ${prefix}/share/wadoku-notify/
+	cp bin/wadoku.png ${prefix}/share/wadoku-notify/
+	cp data/wadoku.sqlite3 ${prefix}/share/wadoku-notify/
+	ln -s /usr/share/wadoku-notify/wadoku-notify ${prefix}/bin/wadoku-notify
+
 clean:
 	rm -f bin/*
