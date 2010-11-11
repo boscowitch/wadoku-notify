@@ -31,9 +31,9 @@ void notify(char * ctitle, char * ctext) {
 	}
 
 	if(not!=null)
-        	not.update((string)ctitle, (string)ctext, "./wadoku.png");
+        	not.update((string)ctitle, (string)ctext, "%s/wadoku.png".printf(workingPath) );
     	else
-		not = new Notification((string)ctitle, (string)ctext, "./wadoku.png", null);
+		not = new Notification((string)ctitle, (string)ctext, "%s/wadoku.png".printf(workingPath), null);
 		
 	not.set_timeout(5000);
 	not.set_urgency(Notify.Urgency.CRITICAL);

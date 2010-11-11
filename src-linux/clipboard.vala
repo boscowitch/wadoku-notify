@@ -16,9 +16,12 @@
 */
 using GLib;
 using Gtk;
+using Posix;
 
 extern void init_db();
 extern void lookup(char * str);
+
+string workingPath;
 
 public class WadokuNotify : GLib.Object {
     public static const string version = "0.2";
@@ -32,8 +35,22 @@ public class WadokuNotify : GLib.Object {
     			lookup(text);
     	}
     }
+    
+    public static string getWorkingDirectory() {
+    	string exelink;
+    	string Path;
+	char exepath[1024];
+	exelink = "/proc/%d/exe".printf(Posix.getpid());
 
+	Posix.readlink(exelink,exepath);
+	Path = (string)exepath;
+
+	Path = Path.slice(0,Path.pointer_to_offset(Path.rchr(-1,'/')));
+	return Path;
+    }
+    
     public static int main(string[] args) {
+    	workingPath = getWorkingDirectory();
     	Gtk.init(ref args);
     	gtk = false;
     	
