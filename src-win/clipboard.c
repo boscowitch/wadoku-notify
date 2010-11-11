@@ -8,7 +8,7 @@ static UINT WM_TASKBARCREATED = 0;
 static HMENU con = 0;
 enum { ID_OPTIONS, ID_SEP, ID_EXIT };
 
-void init_db();
+void init_db(const char* path);
 void lookup(const char* str);
 void notify(const char* title,const char* text);
 
@@ -207,7 +207,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
     SetWindowPos(hWnd,HWND_TOPMOST, x_pos, y_pos, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_SHOWWINDOW); //|SWP_NOMOVE
     */
     
-    init_db();
+    init_db(NULL);
 
 
     //Tray icon

@@ -5,7 +5,7 @@
 #include<unistd.h>
 
 void lookup(const char* str);
-void init_db();
+void init_db(const char* path);
 
 @interface WDKClipper : NSObject
 - (void) timerFired:(NSTimer *) timer;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 	[sItem setHighlightMode:YES];
 	[sItem setMenu:sbMenu];*/
 	
-	init_db();
+	init_db(NULL);
 	
 	while(true) {
 		[waClip timerFired:nil];

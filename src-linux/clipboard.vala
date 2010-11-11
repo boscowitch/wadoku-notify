@@ -18,7 +18,7 @@ using GLib;
 using Gtk;
 using Posix;
 
-extern void init_db();
+extern void init_db(char * path);
 extern void lookup(char * str);
 
 string workingPath;
@@ -81,7 +81,7 @@ public class WadokuNotify : GLib.Object {
     	else {
     		Notify.init("wadoku-notify");
     	}
-    	init_db();
+    	init_db(workingPath);
     	clip = Clipboard.get(Gdk.Atom.intern ("PRIMARY", false));
     	Signal.connect(clip, "owner_change", clipboard_changed , null);
     	
