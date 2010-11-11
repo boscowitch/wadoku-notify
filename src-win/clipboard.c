@@ -8,6 +8,7 @@ static UINT WM_TASKBARCREATED = 0;
 static HMENU con = 0;
 enum { ID_OPTIONS, ID_SEP, ID_EXIT };
 
+void init_db();
 void lookup(const char* str);
 void notify(const char* title,const char* text);
 
@@ -205,6 +206,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
     SetWindowPos(label,NULL, 0, 0, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_NOMOVE|SWP_NOZORDER);
     SetWindowPos(hWnd,HWND_TOPMOST, x_pos, y_pos, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_SHOWWINDOW); //|SWP_NOMOVE
     */
+    
+    init_db();
 
 
     //Tray icon
@@ -242,6 +245,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 	AppendMenu(con,MF_MENUBARBREAK,ID_SEP,NULL);
 	AppendMenu(con,MF_STRING,ID_EXIT,L"E&xit");
 	//end popup menu creation
+	
+	
 
     //Start message event handling
 	MSG Msg;

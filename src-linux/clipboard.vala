@@ -17,6 +17,7 @@
 using GLib;
 using Gtk;
 
+extern void init_db();
 extern void lookup(char * str);
 
 public class WadokuNotify : GLib.Object {
@@ -34,6 +35,7 @@ public class WadokuNotify : GLib.Object {
     public static int main(string[] args) {
     	Gtk.init(ref args);
     	gtk = false;
+    	
     	if (args[1] == "-gtk" ) {
     		gtk = true;
     		window = new Window (WindowType.POPUP);
@@ -61,8 +63,10 @@ public class WadokuNotify : GLib.Object {
     	else {
     		Notify.init("wadoku-notify");
     	}
+    	init_db();
     	clip = Clipboard.get(Gdk.Atom.intern ("PRIMARY", false));
     	Signal.connect(clip, "owner_change", clipboard_changed , null);
+    	
     	
         Gtk.main();
 	    return 0;

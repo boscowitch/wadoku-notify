@@ -5,6 +5,7 @@
 #include<unistd.h>
 
 void lookup(const char* str);
+void init_db();
 
 @interface WDKClipper : NSObject
 - (void) timerFired:(NSTimer *) timer;
@@ -49,6 +50,8 @@ int main(int argc, char *argv[])
 	[sItem setTitle: @"Wadoku"];
 	[sItem setHighlightMode:YES];
 	[sItem setMenu:sbMenu];*/
+	
+	init_db();
 	
 	while(true) {
 		[waClip timerFired:nil];
