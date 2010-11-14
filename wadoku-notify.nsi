@@ -12,8 +12,8 @@ InstallDir $PROGRAMFILES\WadokuNotify
 ;Show all languages, despite user's codepage
   !define MUI_LANGDLL_ALLLANGUAGES
   
-  !insertmacro MUI_LANGUAGE "Japanese"
   !insertmacro MUI_LANGUAGE "German"
+  !insertmacro MUI_LANGUAGE "Japanese"
 
 
   !insertmacro MUI_PAGE_LICENSE "LICENSE.txt"
