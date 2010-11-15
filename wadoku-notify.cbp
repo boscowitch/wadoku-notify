@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Wadoku-Notify" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release Linux">
+				<Option output="wadoku-notify" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Unit filename="src-linux/clipboard.vala" />
+		<Unit filename="src-linux/notify-libnotify.vala" />
+		<Unit filename="src-win/clipboard.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src-win/clipboard.h" />
+		<Unit filename="src-win/notify.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/db.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/fts3_mecab.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/sqlite3.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/sqlite3.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
