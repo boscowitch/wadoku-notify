@@ -5,6 +5,7 @@
 
 
 #include<assert.h>
+#include<stdlib.h>
 #include<string.h>
 #include"sqlite3.h"
 #include<mecab.h>
@@ -187,20 +188,6 @@ static int registerTokenizer(
     sqlite3_step(pStmt);
 
     return sqlite3_finalize(pStmt);
-}
-
-/*
- * entry point
- */
-DLLEXPORT
-int sqlite3_extension_init (
-    sqlite3 *db,          /* The database connection */
-    char **pzErrMsg,      /* Write error messages here */
-    const sqlite3_api_routines *pApi  /* API methods */
-) {
-    SQLITE_EXTENSION_INIT2(pApi)
-
-    return registerTokenizer(db, "mecab", &mecabTokenizerModule);
 }
 
 

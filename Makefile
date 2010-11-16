@@ -2,6 +2,7 @@ ifndef ${prefix}
 prefix=/usr
 endif
 
+FLAGS = -D SQLITE_ENABLE_FTS3 -D SQLITE_ENABLE_FTS3_PARENTHESIS
 
 all:wadoku-notify-linux
 win:wadoku-notify-win
@@ -19,7 +20,9 @@ run-mac:wadoku-notify-mac
 	/bin/bash -c "cd bin; ./wadoku-mac"
 
 wadoku-notify-linux:
-	valac -o bin/wadoku-notify src-linux/clipboard.vala src/db.c src/sqlite3.c src-linux/notify-libnotify.vala --pkg libnotify --pkg gtk+-2.0 --pkg posix
+	valac src-linux/clipboard.vala src/db.c src/fts3_mecab.c src/sqlite3.c src-linux/notify-libnotify.vala --pkg libnotify --pkg gtk+-2.0 --pkg posix  $(FLAGS) -c
+	gcc db.o fts3_mecab.o sqlite3.o clipboard.vala.o notify-libnotify.vala.o -lmecab -lgtk -lgdk -lnotify -o bin/wadoku-notify
+	rm db.o fts3_mecab.o sqlite3.o clipboard.vala.o notify-libnotify.vala.o
 	ln -sf ../data/wadoku.sqlite3 bin/wadoku.sqlite3
 	ln -sf ../data/wadoku.png bin/wadoku.png
 	
@@ -27,12 +30,12 @@ wadoku-notify-win:
 	ln -sf ../src-win/icon.rc bin/icon.rc
 	ln -sf ../data/wadoku.ico bin/wadoku.ico
 	i486-mingw32-windres bin/icon.rc -O coff -o bin/icon.res
-	i486-mingw32-gcc -mwindows -o bin/wadoku.exe src-win/notify.c src/db.c src-win/clipboard.c bin/icon.res src/sqlite3.c -lgdi32 -luser32
+	i486-mingw32-gcc -mwindows -o bin/wadoku.exe src-win/notify.c src/db.c src-win/clipboard.c bin/icon.res src/sqlite3.c -lgdi32 -luser32 $FLAGS
 	ln -sf ../data/wadoku.sqlite3 bin/wadoku.sqlite3
 	rm -f bin/icon.rc bin/icon.res bin/wadoku.ico
 	
 wadoku-notify-mac:
-	clang -Wno-unused-value -o bin/wadoku-mac -framework Foundation -framework AppKit src-mac/clipboard.m src/db.c src-mac/notify.m src/sqlite3.c
+	clang -Wno-unused-value -o bin/wadoku-mac -framework Foundation -framework AppKit src-mac/clipboard.m src/db.c src-mac/notify.m src/sqlite3.c $FLAGS
 	ln -sf ../data/wadoku.sqlite3 bin/wadoku.sqlite3
 	ln -sf ../data/wadoku.png bin/wadoku.png
 	
