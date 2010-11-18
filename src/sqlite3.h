@@ -1,3 +1,7 @@
+#define SQLITE_ENABLE_FTS3
+#define SQLITE_ENABLE_FTS3_PARENTHESIS
+
+
 /*
 ** 2001 September 15
 **

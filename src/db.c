@@ -3,6 +3,9 @@
 #include"sqlite3.h"
 #include <stdio.h>
 
+#define SQLITE_ENABLE_FTS3
+#define SQLITE_ENABLE_FTS3_PARENTHESIS
+
 void notify(const char* ctitle, const char* ctext);
 
 static sqlite3* db = 0;
@@ -38,11 +41,21 @@ void init_db(const char* path) {
 	if(op) {
 		notify("read_uncommitted",sqlite3_errmsg(db));
 	}*/
-
+/*
 	op = sqlite3_exec(db,"CREATE TABLE ram AS SELECT * FROM wadoku.entries",0,0,0);
 	if(op) {
 		notify("sqlite3_exec",sqlite3_errmsg(db));
+	} */
+	op = sqlite3_exec(db,"CREATE VIRTUAL TABLE ram USING fts3(japanese,reading,german,tokenize=simple)",0,0,0);
+	if(op) {
+		notify("sqlite3_exec",sqlite3_errmsg(db));
 	}
+	
+	op = sqlite3_exec(db,"INSERT INTO ram (japanese,reading,german ) SELECT japanese,reading,german FROM wadoku.entries order by id asc",0,0,0);
+	if(op) {
+		notify("sqlite3_exec_insert_into_ram",sqlite3_errmsg(db));
+	}
+	
 		
 }
 
@@ -61,7 +74,7 @@ void lookup(const char* str) {
 	
 	int op=0;
 		
-	const char* SQL = "select (japanese || ' ')|| reading,german from ram where japanese like ? order by id asc limit 1";
+	const char* SQL = "select (japanese || ' ')|| reading,german from ram where japanese match ? order by docid asc limit 1";
 	op = sqlite3_prepare_v2(db,SQL,strlen(SQL),&stm,0);
 	if(op) {
 		notify("sqlite3_prepare_v2",sqlite3_errmsg(db));
