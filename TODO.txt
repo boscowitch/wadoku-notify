@@ -1,0 +1,3 @@
+-precreate index into db file to remove blocking startup indexing CPU usage
+
+-check no result by some hiragana strings like 最高 which is found but not さいこう only さ,さい,い,こ,こう and う !?

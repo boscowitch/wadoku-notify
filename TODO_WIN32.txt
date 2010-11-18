@@ -1,6 +1,4 @@
 -more windows testing in user condition (get bugreports!)
 	-better font !
 
--Faster dict format  (add index to sqlite if possible + generate new db ordereb by length of stipped field which would be smaller and faster)
-
--maybe make nsis instale rnicer with images 
+-maybe make nsis instaler nicer with images 
