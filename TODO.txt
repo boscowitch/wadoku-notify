@@ -1,3 +1,4 @@
--precreate index into db file to remove blocking startup indexing CPU usage
+-precreate index into db file to remove blocking startup indexing CPU usage (only takes some seconds even on 500Mhrz N900 smartphone not 
+more than ~30s)
 
--check no result by some hiragana strings like 最高 which is found but not さいこう only さ,さい,い,こ,こう and う !?
+-also check for konjugated words 強く (write generate stams function and check all in index) 
