@@ -5,9 +5,8 @@ see http://www.wadoku.de/wiki/pages/viewpage.action?pageId=357
 for the full License.
 
 
-The rest of all the program files is under GPL v3 license
-Copyright (C) 2009 by Pascal Schnurr and ?System?
-
+The rest of all the program files are under GPL v3 license
+Copyright (C) 2009 by Pascal Schnurr
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007

@@ -1,7 +1,7 @@
 
 
 
-
+//form of the converted word
 const char* wordtype[] =
 {
 "förmlich verneinte Vergangenheit",
@@ -34,10 +34,12 @@ const char* wordtype[] =
 "Imperativ verneint"
 };
 
-const char* transformation[] =
+
+#define TRANSFORMATION_ENTRYS_COUNT 307
+const char* stem_transformation[] =
 {
 "くありませんでした","い",0,
-"いませんでした" "う",0,
+"いませんでした","う",0,
 "きませんでした","く",0,
 "きませんでした","くる",0,
 "ぎませんでした","ぐ",0,

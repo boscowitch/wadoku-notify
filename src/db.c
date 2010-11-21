@@ -1,5 +1,6 @@
 #include<stdlib.h>
 #include<string.h>
+#include<stdbool.h>
 #include"sqlite3.h"
 #include <stdio.h>
 #include"wordstem.h"
@@ -41,12 +42,12 @@ void init_db(const char* path) {
 	op = sqlite3_exec(db,"PRAGMA max_page_count = 99999999999",0,0,0);
 	if(op) {
 		notify("read_uncommitted",sqlite3_errmsg(db));
-	}*/
-/*
+	}
 	op = sqlite3_exec(db,"CREATE TABLE ram AS SELECT * FROM wadoku.entries",0,0,0);
 	if(op) {
 		notify("sqlite3_exec",sqlite3_errmsg(db));
 	} */
+
 	op = sqlite3_exec(db,"CREATE VIRTUAL TABLE ram USING fts3(japaneseins,german,tokenize=simple)",0,0,0);
 	if(op) {
 		notify("sqlite3_exec",sqlite3_errmsg(db));
@@ -58,6 +59,55 @@ void init_db(const char* path) {
 	}
 
 
+}
+
+bool db_search(const char* str) {
+    int op=0;
+
+	const char* SQL = "select japaneseins,german from ram where japaneseins match ? order by docid asc limit 1";
+	op = sqlite3_prepare_v2(db,SQL,strlen(SQL),&stm,0);
+	if(op) {
+		notify("sqlite3_prepare_v2",sqlite3_errmsg(db));
+	}
+
+	char buffer[2048];
+	sprintf(buffer,"%s",str);
+	sqlite3_bind_text(stm,1,buffer,-1,SQLITE_STATIC);
+	int res = sqlite3_step(stm);
+
+	if(res==SQLITE_ROW) {
+		const char* title = (const char*) sqlite3_column_text(stm,0);
+		const char* text = (const char*) sqlite3_column_text(stm,1);
+		notify( title, text);
+		sqlite3_reset(stm);
+		return true;
+    }
+    sqlite3_reset(stm);
+	return false;
+}
+
+int search_for_stems(const char* str) {
+    int i=0;
+    for(i;i<TRANSFORMATION_ENTRYS_COUNT;i++) {
+        if(strlen(str)>strlen(stem_transformation[i*3]) ) {
+            char* last= (char*) &str[ strlen(str)- strlen(stem_transformation[i*3]) ];
+            if(strcmp(last,stem_transformation[i*3])) {
+
+                int stem_lenght = strlen(str) - strlen(last);
+                int new_suffix_lenght = strlen(stem_transformation[i*3+1]);
+
+                char* temp = (char*) malloc(sizeof(char) * (stem_lenght + new_suffix_lenght + 1) );
+
+                strncpy(temp,str,stem_lenght);
+                strncpy((char*)&temp[stem_lenght], stem_transformation[i*3+1], new_suffix_lenght);
+
+                if(db_search(temp))
+                    return -1;
+            }
+
+        }
+    }
+    return -1;
 }
 
 void lookup(const char* str) {
@@ -73,39 +123,10 @@ void lookup(const char* str) {
 	strcpy(old,str);
 	//end ignore unchanged str
 
-	int op=0;
-
-	const char* SQL = "select japaneseins,german from ram where japaneseins match ? order by docid asc limit 1";
-	op = sqlite3_prepare_v2(db,SQL,strlen(SQL),&stm,0);
-	if(op) {
-		notify("sqlite3_prepare_v2",sqlite3_errmsg(db));
+	if(db_search(str)){
+		return;
+	} else {
+	    search_for_stems(str);
 	}
-
-
-	char buffer[2048];
-	sprintf(buffer,"%s",str);
-	sqlite3_bind_text(stm,1,buffer,-1,SQLITE_STATIC);
-	int res = sqlite3_step(stm);
-
-	if(res!=SQLITE_ROW) {
-		const char* SQL2 = "select japaneseins,german from ram where japaneseins match ? order by docid asc limit 1";
-		op = sqlite3_prepare_v2(db,SQL2,strlen(SQL2),&stm,0);
-		if(op) {
-			notify("sqlite3_prepare_v2",sqlite3_errmsg(db));
-		}
-
-
-		sprintf(buffer,"*%s*",str);
-		sqlite3_bind_text(stm,1,buffer,-1,SQLITE_STATIC);
-		int res = sqlite3_step(stm);
-	}
-
-	if(res==SQLITE_ROW) {
-		const char* title = (const char*)sqlite3_column_text(stm,0);
-		const char* text = (const char*)sqlite3_column_text(stm,1);
-		notify(title,text);
-	}
-
-	sqlite3_reset(stm);
 
 }
