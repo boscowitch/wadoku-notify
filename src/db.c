@@ -97,8 +97,11 @@ int search_for_stems(const char* str) {
                 strncpy(temp,str,stem_lenght);
                 strncpy((char*)&temp[stem_lenght], stem_transformation[i*3+1], new_suffix_lenght);
 
-                if(db_search(temp))
+                if(db_search(temp)) {
+                    free(temp);
                     return -1;
+                }
+                free(temp);
             }
 
         }
