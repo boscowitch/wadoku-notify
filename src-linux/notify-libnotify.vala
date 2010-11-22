@@ -21,12 +21,12 @@ void notify(char * ctitle, char * ctext) {
 		temp = temp.replace("<","&#60;");
 		temp = temp.replace(">","&#62;");
 		temp = temp.replace("&","&amp");
-	
+
 		label.set_markup("<span font=\"Meiryo 14\">%s</span>\n%s".printf((string)ctitle,(string)ctext));
 		window.resize(1,1);
 		window.show_all();
 		Source.remove(Timer);
-		Timer = Timeout.add(5000,HideTimer);
+		Timer = Timeout.add(5500,HideTimer);
 		return;
 	}
 
@@ -34,10 +34,10 @@ void notify(char * ctitle, char * ctext) {
         	not.update((string)ctitle, (string)ctext, "%s/wadoku.png".printf(workingPath) );
     	else
 		not = new Notification((string)ctitle, (string)ctext, "%s/wadoku.png".printf(workingPath), null);
-		
-	not.set_timeout(5000);
+
+	not.set_timeout(5500);
 	not.set_urgency(Notify.Urgency.CRITICAL);
-	
+
 	try {
 		not.show();
 	} catch(GLib.Error err) {

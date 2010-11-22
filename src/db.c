@@ -38,11 +38,7 @@ void init_db(const char* path) {
 		notify("sqlite3_exec",sqlite3_errmsg(db));
 	}
 
-	/*
-	op = sqlite3_exec(db,"PRAGMA max_page_count = 99999999999",0,0,0);
-	if(op) {
-		notify("read_uncommitted",sqlite3_errmsg(db));
-	}
+	/* Old version without index
 	op = sqlite3_exec(db,"CREATE TABLE ram AS SELECT * FROM wadoku.entries",0,0,0);
 	if(op) {
 		notify("sqlite3_exec",sqlite3_errmsg(db));

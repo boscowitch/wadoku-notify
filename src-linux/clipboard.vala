@@ -53,34 +53,42 @@ public class WadokuNotify : GLib.Object {
     	workingPath = getWorkingDirectory();
     	Gtk.init(ref args);
     	gtk = false;
-    	
-    	if (args[1] == "-gtk" ) {
-    		gtk = true;
-    		window = new Window (WindowType.POPUP);
-		window.skip_taskbar_hint = true;
-		window.skip_pager_hint = true;
-		window.can_focus = false;
-		window.move(Gdk.Screen.width() - 310, Gdk.Screen.height() - 250);
-		Gdk.Color color;
-		Gdk.Color.parse("black", out color);
-		window.modify_bg( Gtk.StateType.NORMAL,color);
-		window.border_width = 2;
-		window.opacity = 0.75f;
-		window.set_default_size(300,-1);
-		window.destroy.connect (Gtk.main_quit);
-		label = new Label("");
-		label.selectable = false;
-		label.set_line_wrap(true);
-		label.set_size_request(300,-1);
-		Gdk.Color fg_color;
-		Gdk.Color.parse("white",out fg_color);
-		label.modify_fg(StateType.NORMAL,fg_color);
-		window.add(label);
-		Timer = Timeout.add(5000,HideTimer);
-    	}
-    	else {
-    		Notify.init("wadoku-notify");
-    	}
+    	for(int i=1; i < args.length; i++) {
+    		if (args[i] == "-gtk" ) {
+			gtk = true;
+			window = new Window (WindowType.POPUP);
+			window.skip_taskbar_hint = true;
+			window.skip_pager_hint = true;
+			window.can_focus = false;
+			window.move(Gdk.Screen.width() - 310, Gdk.Screen.height() - 250);
+			Gdk.Color color;
+			Gdk.Color.parse("black", out color);
+			window.modify_bg( Gtk.StateType.NORMAL,color);
+			window.border_width = 2;
+			window.opacity = 0.75f;
+			window.set_default_size(300,-1);
+			window.destroy.connect (Gtk.main_quit);
+			label = new Label("");
+			label.selectable = false;
+			label.set_line_wrap(true);
+			label.set_size_request(300,-1);
+			Gdk.Color fg_color;
+			Gdk.Color.parse("white",out fg_color);
+			label.modify_fg(StateType.NORMAL,fg_color);
+			window.add(label);
+			Timer = Timeout.add(5500,HideTimer);
+		} 
+		else {
+			GLib.stdout.printf("Usage:\n -gtk\tadd this for gtk notify window output instead of standart libnotify\n");
+			return 0;
+		}
+			
+	}
+	
+	if(!gtk) { 
+		Notify.init("wadoku-notify");
+	}
+	
     	init_db(workingPath);
     	clip = Clipboard.get(Gdk.Atom.intern ("PRIMARY", false));
     	Signal.connect(clip, "owner_change", clipboard_changed , null);

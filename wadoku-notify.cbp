@@ -13,6 +13,8 @@
 		</Build>
 		<Unit filename="src-linux/clipboard.vala" />
 		<Unit filename="src-linux/notify-libnotify.vala" />
+		<Unit filename="src-mac/clipboard.m" />
+		<Unit filename="src-mac/notify.m" />
 		<Unit filename="src-win/clipboard.c">
 			<Option compilerVar="CC" />
 		</Unit>

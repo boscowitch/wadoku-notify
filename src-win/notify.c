@@ -19,6 +19,6 @@ void notify(const char* ctitle, const char* ctext) {
 	ShowWindow(hWnd,SW_SHOW);
     SetWindowPos(label,NULL, 0, 0, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_NOMOVE|SWP_NOZORDER);
     SetWindowPos(hWnd,HWND_TOPMOST, x_pos, y_pos, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_SHOWWINDOW); //|SWP_NOMOVE
-	SetTimer(hWnd,TIMER_HIDE,5000,NULL);
+	SetTimer(hWnd,TIMER_HIDE,5500,NULL);
 	free(content);
 }
