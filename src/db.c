@@ -16,22 +16,22 @@ static sqlite3_stmt * stm = 0;
 
 void init_db(const char* path) {
 
-	int op = sqlite3_open(":memory:", &db); //op = sqlite3_open_v2("wadoku.sqlite3",&db,SQLITE_OPEN_READONLY|SQLITE_OPEN_NOMUTEX,0);
+	int op; //op = sqlite3_open_v2("wadoku.sqlite3",&db,SQLITE_OPEN_READONLY|SQLITE_OPEN_NOMUTEX,0);
+
+	if(path != NULL) {
+		char* sql = (char*) malloc(36+ strlen(path));
+		sprintf( sql,"%s/wadoku.sqlite3",path);
+		op = sqlite3_open(sql, &db);;
+		free(sql);
+	}
+	else {
+		op = sqlite3_open("wadoku.sqlite3", &db);
+	}
+
 
 	op = sqlite3_exec(db,"PRAGMA read_uncommitted = True;",0,0,0);
 	if(op) {
 		notify("read_uncommitted",sqlite3_errmsg(db));
-	}
-
-
-	if(path != NULL) {
-		char* sql = (char*) malloc(36+ strlen(path));
-		sprintf( sql,"ATTACH '%s/wadoku.sqlite3' AS wadoku",path);
-		op = sqlite3_exec(db,sql,0,0,0);
-		free(sql);
-	}
-	else {
-		op = sqlite3_exec(db,"ATTACH 'wadoku.sqlite3' AS wadoku",0,0,0);
 	}
 
 	if(op) {
@@ -44,23 +44,12 @@ void init_db(const char* path) {
 		notify("sqlite3_exec",sqlite3_errmsg(db));
 	} */
 
-	op = sqlite3_exec(db,"CREATE VIRTUAL TABLE ram USING fts3(japaneseins,german,tokenize=simple)",0,0,0);
-	if(op) {
-		notify("sqlite3_exec",sqlite3_errmsg(db));
-	}
-
-	op = sqlite3_exec(db,"INSERT INTO ram ( japaneseins ,german ) SELECT ((japanese || ' ')|| reading) AS japaneseins, german FROM wadoku.entries order by id asc",0,0,0);
-	if(op) {
-		notify("sqlite3_exec_insert_into_ram",sqlite3_errmsg(db));
-	}
-
-
 }
 
 bool db_search(const char* str) {
     int op=0;
 
-	const char* SQL = "select japaneseins,german from ram where japaneseins match ? order by docid asc limit 1";
+	const char* SQL = "select japaneseins,german from indexed_entries where japaneseins match ? order by docid asc limit 1";
 	op = sqlite3_prepare_v2(db,SQL,strlen(SQL),&stm,0);
 	if(op) {
 		notify("sqlite3_prepare_v2",sqlite3_errmsg(db));
