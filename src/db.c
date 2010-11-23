@@ -74,7 +74,7 @@ bool db_search(const char* str) {
 	if(res==SQLITE_ROW) {
 		const char* title = (const char*) sqlite3_column_text(stm,0);
 		const char* text = (const char*) sqlite3_column_text(stm,1);
-		notify( title, text);
+		notify( str, text);
 		sqlite3_reset(stm);
 		return true;
     }
@@ -87,7 +87,7 @@ int search_for_stems(const char* str) {
     for(i;i<TRANSFORMATION_ENTRYS_COUNT;i++) {
         if(strlen(str)>strlen(stem_transformation[i*3]) ) {
             char* last= (char*) &str[ strlen(str)- strlen(stem_transformation[i*3]) ];
-            if(strcmp(last,stem_transformation[i*3])) {
+            if(strcmp(last,stem_transformation[i*3]) == 0) {
 
                 int stem_lenght = strlen(str) - strlen(last);
                 int new_suffix_lenght = strlen(stem_transformation[i*3+1]);
