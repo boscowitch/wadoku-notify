@@ -5,31 +5,40 @@
 		<Option title="Wadoku-Notify" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Release Linux">
+			<Target title="Release">
 				<Option output="wadoku-notify" prefix_auto="1" extension_auto="1" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 			</Target>
+			<Target title="Debug">
+				<Option output="wadoku-notify" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
 		</Build>
-		<Unit filename="src-linux/clipboard.vala" />
-		<Unit filename="src-linux/notify-libnotify.vala" />
-		<Unit filename="src-mac/clipboard.m" />
-		<Unit filename="src-mac/notify.m" />
-		<Unit filename="src-win/clipboard.c">
+		<Unit filename="src-linux\clipboard.vala" />
+		<Unit filename="src-linux\notify-libnotify.vala" />
+		<Unit filename="src-mac\clipboard.m" />
+		<Unit filename="src-mac\notify.m" />
+		<Unit filename="src-win\clipboard.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src-win/clipboard.h" />
-		<Unit filename="src-win/notify.c">
+		<Unit filename="src-win\clipboard.h" />
+		<Unit filename="src-win\notify.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/db.c">
+		<Unit filename="src\db.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/sqlite3.c">
+		<Unit filename="src\sqlite3.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/sqlite3.h" />
-		<Unit filename="src/wordstem.h" />
+		<Unit filename="src\sqlite3.h" />
+		<Unit filename="src\wordstem.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

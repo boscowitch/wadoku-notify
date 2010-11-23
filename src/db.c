@@ -92,7 +92,8 @@ int search_for_stems(const char* str) {
                 int stem_lenght = strlen(str) - strlen(last);
                 int new_suffix_lenght = strlen(stem_transformation[i*3+1]);
 
-                char* temp = (char*) malloc(sizeof(char) * (stem_lenght + new_suffix_lenght + 1) );
+                char* temp = (char*) calloc( (stem_lenght + new_suffix_lenght + 1),sizeof(char) );
+
 
                 strncpy(temp,str,stem_lenght);
                 strncpy((char*)&temp[stem_lenght], stem_transformation[i*3+1], new_suffix_lenght);
