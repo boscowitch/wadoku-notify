@@ -74,7 +74,7 @@ bool db_search(const char* str) {
 	if(res==SQLITE_ROW) {
 		const char* title = (const char*) sqlite3_column_text(stm,0);
 		const char* text = (const char*) sqlite3_column_text(stm,1);
-		notify( str, text);
+		notify( title, text);
 		sqlite3_reset(stm);
 		return true;
     }
