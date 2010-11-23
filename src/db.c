@@ -13,6 +13,21 @@ void notify(const char* ctitle, const char* ctext);
 static sqlite3* db = 0;
 static sqlite3_stmt * stm = 0;
 
+int loadDb(sqlite3 *pInMemory, sqlite3 *pfileDB){
+  int rc;                   /* Function return code */
+  sqlite3_backup *pBackup;  /* Backup object used to copy data */
+
+
+    pBackup = sqlite3_backup_init(pInMemory, "main", pfileDB, "main");
+    if( pBackup ){
+      (void)sqlite3_backup_step(pBackup, -1);
+      (void)sqlite3_backup_finish(pBackup);
+    }
+    rc = sqlite3_errcode(pInMemory);
+
+  return rc;
+}
+
 
 void init_db(const char* path) {
 
@@ -21,21 +36,37 @@ void init_db(const char* path) {
 	if(path != NULL) {
 		char* sql = (char*) malloc(36+ strlen(path));
 		sprintf( sql,"%s/wadoku.sqlite3",path);
-		op = sqlite3_open(sql, &db);;
+		op = sqlite3_open(sql, &db);
 		free(sql);
 	}
 	else {
 		op = sqlite3_open("wadoku.sqlite3", &db);
 	}
 
+	if(op) {
+		notify("sqlite3_open",sqlite3_errmsg(db));
+	}
+
+	sqlite3 *memory_db;
+
+	op = sqlite3_open(":memory:",&memory_db);
+    if(op) {
+		notify("sqlite3_open","failed to open memory database, could lead to slower search speed!");
+		op = 0;
+	}
+
+	if( SQLITE_OK  == loadDb(memory_db,db)) {
+	    sqlite3_close(db);
+	    db=memory_db;
+	} else {
+	    notify("loadDb",sqlite3_errmsg(memory_db));
+	    sqlite3_close(memory_db);
+	}
+
 
 	op = sqlite3_exec(db,"PRAGMA read_uncommitted = True;",0,0,0);
 	if(op) {
 		notify("read_uncommitted",sqlite3_errmsg(db));
-	}
-
-	if(op) {
-		notify("sqlite3_exec",sqlite3_errmsg(db));
 	}
 
 	/* Old version without index
