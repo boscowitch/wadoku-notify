@@ -119,7 +119,7 @@ void lookup(const char* str) {
 		}
 	}
 	free(old);
-	old = malloc(strlen(str)+1);
+	old = calloc(strlen(str)+1,sizeof(char));
 	strcpy(old,str);
 	//end ignore unchanged str
 
