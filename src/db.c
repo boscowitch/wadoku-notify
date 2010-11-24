@@ -29,7 +29,7 @@ int loadDb(sqlite3 *pInMemory, sqlite3 *pfileDB){
 }
 
 
-void init_db(const char* path) {
+void init_db(const char* path,bool mm) {
 
 	int op; //op = sqlite3_open_v2("wadoku.sqlite3",&db,SQLITE_OPEN_READONLY|SQLITE_OPEN_NOMUTEX,0);
 
@@ -47,21 +47,23 @@ void init_db(const char* path) {
 		notify("sqlite3_open",sqlite3_errmsg(db));
 	}
 
-	sqlite3 *memory_db;
+    if(mm) {
+        sqlite3 *memory_db;
 
-	op = sqlite3_open(":memory:",&memory_db);
-    if(op) {
-		notify("sqlite3_open","failed to open memory database, could lead to slower search speed!");
-		op = 0;
-	}
+        op = sqlite3_open(":memory:",&memory_db);
+        if(op) {
+            notify("sqlite3_open","failed to open memory database, could lead to slower search speed!");
+            op = 0;
+        }
 
-	if( SQLITE_OK  == loadDb(memory_db,db)) {
-	    sqlite3_close(db);
-	    db=memory_db;
-	} else {
-	    notify("loadDb",sqlite3_errmsg(memory_db));
-	    sqlite3_close(memory_db);
-	}
+        if( SQLITE_OK  == loadDb(memory_db,db)) {
+            sqlite3_close(db);
+            db=memory_db;
+        } else {
+            notify("loadDb",sqlite3_errmsg(memory_db));
+            sqlite3_close(memory_db);
+        }
+    }
 
 
 	op = sqlite3_exec(db,"PRAGMA read_uncommitted = True;",0,0,0);

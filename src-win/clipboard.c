@@ -206,8 +206,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
     SetWindowPos(label,NULL, 0, 0, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_NOMOVE|SWP_NOZORDER);
     SetWindowPos(hWnd,HWND_TOPMOST, x_pos, y_pos, lRect->right - lRect->left, lRect->bottom - lRect->top, SWP_SHOWWINDOW); //|SWP_NOMOVE
     */
-    
-    init_db(NULL);
+
+
+
+
+    init_db(NULL,true);
 
 
     //Tray icon
@@ -245,8 +248,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
 	AppendMenu(con,MF_MENUBARBREAK,ID_SEP,NULL);
 	AppendMenu(con,MF_STRING,ID_EXIT,L"E&xit");
 	//end popup menu creation
-	
-	
+
+
 
     //Start message event handling
 	MSG Msg;

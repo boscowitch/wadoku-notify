@@ -26,11 +26,11 @@ int previousChangeCount;
 	if ( changeCount <= previousChangeCount )
 		return;
 	previousChangeCount = changeCount;
-	
+
 	id string = nil;
 	NSArray *supportedTypes = [NSArray 	arrayWithObject:NSStringPboardType];
 	NSString *bestType = [pboard availableTypeFromArray: supportedTypes];
-	 
+
     if ( [bestType isEqualToString:NSStringPboardType] )
     {
         string = [pboard stringForType:NSStringPboardType];
@@ -43,16 +43,16 @@ int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	WDKClipper *waClip = [[WDKClipper new] autorelease];
-	
+
 	/*NSStatusBar *sBar = [NSStatusBar systemStatusBar];
 	NSStatusItem *sItem = [sBar statusItemWithLength:NSVariableStatusItemLength];
 	[sItem retain];
 	[sItem setTitle: @"Wadoku"];
 	[sItem setHighlightMode:YES];
 	[sItem setMenu:sbMenu];*/
-	
-	init_db(NULL);
-	
+
+	init_db(NULL,false);
+
 	while(true) {
 		[waClip timerFired:nil];
 		usleep(500);

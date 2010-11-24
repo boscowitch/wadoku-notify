@@ -18,7 +18,7 @@ using GLib;
 using Gtk;
 using Posix;
 
-extern void init_db(char * path);
+extern void init_db(char * path,bool mm);
 extern void lookup(char * str);
 
 string workingPath;
@@ -27,6 +27,7 @@ public class WadokuNotify : GLib.Object {
     public static const string version = "0.2";
     public static Clipboard clip;
     public static string text;
+    public static bool memory_mode;
 
     public static void clipboard_changed() {
     	text = clip.wait_for_text();
@@ -35,7 +36,7 @@ public class WadokuNotify : GLib.Object {
     			lookup(text);
     	}
     }
-    
+
     public static string getWorkingDirectory() {
     	string exelink;
     	string Path;
@@ -48,11 +49,12 @@ public class WadokuNotify : GLib.Object {
 	Path = Path.slice(0,Path.pointer_to_offset(Path.rchr(-1,'/')));
 	return Path;
     }
-    
+
     public static int main(string[] args) {
     	workingPath = getWorkingDirectory();
     	Gtk.init(ref args);
     	gtk = false;
+    	memory_mode = false;
     	for(int i=1; i < args.length; i++) {
     		if (args[i] == "-gtk" ) {
 			gtk = true;
@@ -77,26 +79,29 @@ public class WadokuNotify : GLib.Object {
 			label.modify_fg(StateType.NORMAL,fg_color);
 			window.add(label);
 			Timer = Timeout.add(5500,HideTimer);
-		} 
+		}
+		else if (args[i] == "-memory-cache") {
+			memory_mode = true;
+		}
 		else {
-			GLib.stdout.printf("Usage:\n -gtk\tadd this for gtk notify window output instead of standart libnotify\n");
+			GLib.stdout.printf("Usage:\n -gtk\tadd this for gtk notify window output instead of standart libnotify\n -memory-cache cache whole databae into memory (needs ca 80MB ram), mitght be faster for very slow harddrive");
 			return 0;
 		}
-			
+
 	}
-	
-	if(!gtk) { 
+
+	if(!gtk) {
 		Notify.init("wadoku-notify");
 	}
-	
-    	init_db(workingPath);
+
+    	init_db(workingPath,memory_mode);
     	clip = Clipboard.get(Gdk.Atom.intern ("PRIMARY", false));
     	Signal.connect(clip, "owner_change", clipboard_changed , null);
-    	
-    	
+
+
         Gtk.main();
 	    return 0;
     }
-    
+
 }
 
