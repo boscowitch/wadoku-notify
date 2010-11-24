@@ -8,7 +8,7 @@ static UINT WM_TASKBARCREATED = 0;
 static HMENU con = 0;
 enum { ID_OPTIONS, ID_SEP, ID_EXIT };
 
-void init_db(const char* path);
+void init_db(const char* path,BOOL mm);
 void lookup(const char* str);
 void notify(const char* title,const char* text);
 
@@ -208,9 +208,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE b, LPSTR c, int d) {
     */
 
 
-
-
-    init_db(NULL,true);
+    init_db(NULL,TRUE);
 
 
     //Tray icon
