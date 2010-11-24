@@ -52,6 +52,9 @@ int main(int argc, char *argv[])
 	[sItem setMenu:sbMenu];*/
 
 	init_db(NULL,false);
+
+    while(true) {
+        [waClip timerFired:nil];
 		usleep(500);
 	}
 	[pool drain];
