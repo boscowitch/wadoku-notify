@@ -5,7 +5,7 @@
 #include<unistd.h>
 
 void lookup(const char* str);
-void init_db(const char* path);
+void init_db(const char* path,bool mm);
 
 @interface WDKClipper : NSObject
 - (void) timerFired:(NSTimer *) timer;
