@@ -129,7 +129,7 @@ int search_for_stems(const char* str) {
 
         }
     }
-    return -1;
+    return -2;
 }
 
 void lookup(const char* str) {
@@ -147,8 +147,20 @@ void lookup(const char* str) {
 
 	if(db_search(str)){
 		return;
+	} else if(search_for_stems(str) == -1) {
+		return;
 	} else {
-	    search_for_stems(str);
+		char *temp;
+		temp = (char*) calloc(strlen(str) + strlen("…") + 1,sizeof(char));
+		strcpy(temp,str);
+		strcpy(&temp[strlen(temp)],"…");
+		if(!db_search(temp))
+		{
+			strcpy(temp,"…");
+			strcpy(&temp[strlen("…")],str);
+			db_search(temp);
+		}
+		free(temp);
 	}
 
 }
