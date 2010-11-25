@@ -1,4 +1,6 @@
--precreate index into db file to remove blocking startup indexing CPU usage (only takes some seconds even on 500Mhrz N900 smartphone not 
-more than ~30s)
+-maybe generate indexed db at insall for smaller download size
 
--also check for konjugated words 強く (write generate stams function and check all in index) 
+-extra dailog (or companion programm) for multiple results search
+
+-setting dialog for windau users ?
+
