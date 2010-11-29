@@ -31,11 +31,12 @@ const char* wordtype[] =
 "masu Stamm",
 "adv",
 "nomen",
-"Imperativ verneint"
+"Imperativ verneint",
+"potential oder passive Vergangenheit"
 };
 
 
-#define TRANSFORMATION_ENTRYS_COUNT 307
+#define TRANSFORMATION_ENTRYS_COUNT 308
 const char* stem_transformation[] =
 {
 "くありませんでした","い",0,
@@ -210,6 +211,7 @@ const char* stem_transformation[] =
 "らせる","る",9,
 "らない","る",15,
 "られる","る",10,
+"られた","る",28,
 "りそう","る",11,
 "りたい","る",12,
 "ります","る",13,
