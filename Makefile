@@ -1,22 +1,10 @@
-ifndef ${prefix}
-prefix=/usr
+ifndef ${DESTDIR}
+DESTDIR=/
 endif
-
 
 all:wadoku-notify-linux
 win:wadoku-notify-win
 mac:wadoku-notify-mac
-
-run:run-linux
-
-run-linux:wadoku-notify-linux
-	/bin/bash -c "cd bin; ./wadoku-notify"
-	
-run-win:wadoku-notify-linux
-	/bin/bash -c "cd bin; wine ./wadoku.exe"
-
-run-mac:wadoku-notify-mac
-	/bin/bash -c "cd bin; ./wadoku-mac"
 
 wadoku-notify-linux:
 	valac -o bin/wadoku-notify src-linux/clipboard.vala src/db.c src/sqlite3.c src-linux/notify-libnotify.vala --pkg libnotify --pkg gtk+-2.0 --pkg posix
@@ -37,14 +25,14 @@ wadoku-notify-mac:
 	ln -sf ../data/wadoku.png bin/wadoku.png
 	
 install:all
-	mkdir -p ${prefix}/bin
-	rm -f ${prefix}/bin/wadoku-notify
-	mkdir -p ${prefix}/share
-	mkdir -p ${prefix}/share/wadoku-notify
-	cp bin/wadoku-notify ${prefix}/share/wadoku-notify/
-	cp bin/wadoku.png ${prefix}/share/wadoku-notify/
-	cp data/wadoku.sqlite3 ${prefix}/share/wadoku-notify/
-	ln -s /usr/share/wadoku-notify/wadoku-notify ${prefix}/bin/wadoku-notify
+	mkdir -p ${DESTDIR}/usr/bin
+	rm -f ${DESTDIR}/usr/bin/wadoku-notify
+	mkdir -p ${DESTDIR}/usr/share
+	mkdir -p ${DESTDIR}/usr/share/wadoku-notify
+	cp bin/wadoku-notify ${DESTDIR}/usr/share/wadoku-notify/
+	cp bin/wadoku.png ${DESTDIR}/usr/share/wadoku-notify/
+	cp data/wadoku.sqlite3 ${DESTDIR}/usr/share/wadoku-notify/
+	ln -s ${DESTDIR}/usr/share/wadoku-notify/wadoku-notify ${DESTDIR}/usr/bin/wadoku-notify
 
 clean:
 	rm -f bin/*
