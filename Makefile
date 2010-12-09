@@ -32,7 +32,7 @@ install:all
 	cp bin/wadoku-notify ${DESTDIR}/usr/share/wadoku-notify/
 	cp bin/wadoku.png ${DESTDIR}/usr/share/wadoku-notify/
 	cp data/wadoku.sqlite3 ${DESTDIR}/usr/share/wadoku-notify/
-	ln -s ${DESTDIR}/usr/share/wadoku-notify/wadoku-notify ${DESTDIR}/usr/bin/wadoku-notify
+	ln -s /usr/share/wadoku-notify/wadoku-notify ${DESTDIR}/usr/bin/wadoku-notify
 
 clean:
 	rm -f bin/*
