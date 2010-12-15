@@ -18,11 +18,11 @@ bool HideTimer() {
 void notify(char * ctitle, char * ctext) {
 	if(gtk) {
 		string temp = (string) ctext;
+		temp = temp.replace("&","&amp");
 		temp = temp.replace("<","&#60;");
 		temp = temp.replace(">","&#62;");
-		temp = temp.replace("&","&amp");
 
-		label.set_markup("<span font=\"Meiryo 14\">%s</span>\n%s".printf((string)ctitle,(string)ctext));
+		label.set_markup("<span font=\"Meiryo 14\">%s</span>\n%s".printf((string)ctitle,temp));
 		window.resize(1,1);
 		window.show_all();
 		Source.remove(Timer);
