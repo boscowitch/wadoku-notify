@@ -2,12 +2,20 @@ ifndef ${DESTDIR}
 DESTDIR=/
 endif
 
+ifneq ($(SBOX_DPKG_INST_ARCH),)  
+N900_MODE="SBOX"  
+endif  
+  
+ifneq ($(OSSO_PRODUCT_NAME),N900)  
+N900_MODE="NATIVE"  
+endif
+
 all:wadoku-notify-linux
 win:wadoku-notify-win
 mac:wadoku-notify-mac
 
 wadoku-notify-linux:
-ifneq ($(SBOX_DPKG_INST_ARCH),)
+ifneq ($(N900_MODE),)
 	valac -o bin/wadoku-notify src-linux/clipboard.vala src/db.c src/sqlite3.c src-linux/notify-libnotify.vala --pkg libnotify --pkg gtk+-2.0 --pkg posix -D N900
 else
 	valac -o bin/wadoku-notify src-linux/clipboard.vala src/db.c src/sqlite3.c src-linux/notify-libnotify.vala --pkg libnotify --pkg gtk+-2.0 --pkg posix
@@ -35,7 +43,7 @@ install:all
 	mkdir -p ${DESTDIR}/usr/share/pixmaps
 	cp bin/wadoku.png ${DESTDIR}/usr/share/pixmaps/wadoku-notify.png
 
-ifneq ($(SBOX_DPKG_INST_ARCH),)
+ifneq ($(N900_MODE),)
 	mkdir -p ${DESTDIR}/opt/wadoku-notify
 	mkdir -p ${DESTDIR}/usr/share/applications/hildon
 	cp bin/wadoku-notify ${DESTDIR}/opt/wadoku-notify/
