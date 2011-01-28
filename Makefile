@@ -2,12 +2,12 @@ ifndef ${DESTDIR}
 DESTDIR=/
 endif
 
-ifneq ($(SBOX_DPKG_INST_ARCH),)  
-N900_MODE="SBOX"  
-endif  
-  
-ifneq ($(OSSO_PRODUCT_NAME),N900)  
-N900_MODE="NATIVE"  
+ifneq ($(SBOX_DPKG_INST_ARCH),)
+N900_MODE="SBOX"
+endif
+
+ifeq ($(OSSO_PRODUCT_NAME),N900)
+N900_MODE="NATIVE"
 endif
 
 all:wadoku-notify-linux
@@ -41,22 +41,24 @@ install:all
 	mkdir -p ${DESTDIR}/usr/share
 	rm -f ${DESTDIR}/usr/bin/wadoku-notify
 	mkdir -p ${DESTDIR}/usr/share/pixmaps
-	cp bin/wadoku.png ${DESTDIR}/usr/share/pixmaps/wadoku-notify.png
-
 ifneq ($(N900_MODE),)
 	mkdir -p ${DESTDIR}/opt/wadoku-notify
 	mkdir -p ${DESTDIR}/usr/share/applications/hildon
 	cp bin/wadoku-notify ${DESTDIR}/opt/wadoku-notify/
+	cp bin/wadoku.png ${DESTDIR}/opt/wadoku-notify/
 	cp data/wadoku.sqlite3 ${DESTDIR}/opt/wadoku-notify/
 	cp data/wadoku-notify.desktop ${DESTDIR}/usr/share/applications/hildon/
 	ln -sf /opt/wadoku-notify/wadoku-notify ${DESTDIR}/usr/bin/wadoku-notify
+	ln -sf /opt/wadoku-notify/wadoku.png ${DESTDIR}/usr/share/pixmaps/wadoku-notify.png
 else
 	mkdir -p ${DESTDIR}/usr/share/wadoku-notify
 	mkdir -p ${DESTDIR}/usr/share/applications
 	cp bin/wadoku-notify ${DESTDIR}/usr/share/wadoku-notify/
+	cp bin/wadoku.png ${DESTDIR}/usr/share/wadoku-notify/
 	cp data/wadoku.sqlite3 ${DESTDIR}/usr/share/wadoku-notify/
 	cp data/wadoku-notify.desktop ${DESTDIR}/usr/share/applications/
 	ln -sf /usr/share/wadoku-notify/wadoku-notify ${DESTDIR}/usr/bin/wadoku-notify
+	ln -sf /usr/share/wadoku-notify/wadoku.png ${DESTDIR}/usr/share/pixmaps/wadoku-notify.png
 endif
 
 clean:

@@ -38,9 +38,9 @@ void notify(char * ctitle, char * ctext) {
 	}
 
 	if(not!=null)
-        	not.update((string)ctitle, (string)ctext, "/usr/share/pixmaps/wadoku-notify.png" );
+        	not.update((string)ctitle, (string)ctext, "%s/wadoku.png".printf(workingPath) );
     	else
-		not = new Notification((string)ctitle, (string)ctext, "/usr/share/pixmaps/wadoku-notify.png", null);
+		not = new Notification((string)ctitle, (string)ctext, "%s/wadoku.png".printf(workingPath), null);
 
 	not.set_timeout(5500);
 	not.set_urgency(Notify.Urgency.CRITICAL);
