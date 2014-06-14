@@ -52,12 +52,15 @@ ifneq ($(N900_MODE),)
 	ln -sf /opt/wadoku-notify/wadoku.png ${DESTDIR}/usr/share/pixmaps/wadoku-notify.png
 else
 	mkdir -p ${DESTDIR}/usr/share/wadoku-notify
+	mkdir -p ${DESTDIR}/usr/lib/wadoku-notify
 	mkdir -p ${DESTDIR}/usr/share/applications
-	cp bin/wadoku-notify ${DESTDIR}/usr/share/wadoku-notify/
+	cp bin/wadoku-notify ${DESTDIR}/usr/lib/wadoku-notify/
 	cp bin/wadoku.png ${DESTDIR}/usr/share/wadoku-notify/
 	cp data/wadoku.sqlite3 ${DESTDIR}/usr/share/wadoku-notify/
 	cp data/wadoku-notify.desktop ${DESTDIR}/usr/share/applications/
-	ln -sf /usr/share/wadoku-notify/wadoku-notify ${DESTDIR}/usr/bin/wadoku-notify
+	ln -sf /usr/share/wadoku-notify/wadoku.sqlite3 ${DESTDIR}/usr/lib/wadoku-notify/wadoku.sqlite3
+	ln -sf /usr/share/wadoku-notify/wadoku.png ${DESTDIR}/usr/lib/wadoku-notify/wadoku.png
+	ln -sf /usr/lib/wadoku-notify/wadoku-notify ${DESTDIR}/usr/bin/wadoku-notify
 	ln -sf /usr/share/wadoku-notify/wadoku.png ${DESTDIR}/usr/share/pixmaps/wadoku-notify.png
 endif
 

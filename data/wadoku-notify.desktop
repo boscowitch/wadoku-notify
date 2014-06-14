@@ -1,6 +1,4 @@
-#!/usr/bin/env xdg-open
 [Desktop Entry]
-Encoding=UTF-8
 Version=1.0
 Comment=wadoku translator
 Type=Application
@@ -9,5 +7,4 @@ Exec=wadoku-notify -gtk
 Icon=wadoku-notify
 StartupNotify=true
 Terminal=false
-Type=Application
 Categories=GNOME;Application;Utility;
