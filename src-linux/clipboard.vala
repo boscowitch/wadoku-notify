@@ -78,7 +78,7 @@ public class WadokuNotify : GLib.Object {
 			Gdk.Color.parse("white",out fg_color);
 			label.modify_fg(StateType.NORMAL,fg_color);
 			window.add(label);
-			Timer = Timeout.add(5500,HideTimer);
+			Timer = GLib.Timeout.add(5500,HideTimer);
 		}
 		else if (args[i] == "-memory-cache") {
 			memory_mode = true;

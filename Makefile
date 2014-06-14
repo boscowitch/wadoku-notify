@@ -18,7 +18,7 @@ wadoku-notify-linux:
 ifneq ($(N900_MODE),)
 	valac -o bin/wadoku-notify src-linux/clipboard.vala src/db.c src/sqlite3.c src-linux/notify-libnotify.vala --pkg libnotify --pkg gtk+-2.0 --pkg posix -D N900
 else
-	valac -o bin/wadoku-notify src-linux/clipboard.vala src/db.c src/sqlite3.c src-linux/notify-libnotify.vala --pkg libnotify --pkg gtk+-2.0 --pkg posix
+	valac -o bin/wadoku-notify src-linux/clipboard.vala src/db.c src/sqlite3.c src-linux/notify-libnotify.vala --pkg libnotify --pkg gtk+-2.0 --pkg posix -X -ldl
 endif
 	ln -sf ../data/wadoku.sqlite3 bin/wadoku.sqlite3
 	ln -sf ../data/wadoku.png bin/wadoku.png
