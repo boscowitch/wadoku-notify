@@ -84,7 +84,7 @@ public class WadokuNotify : GLib.Object {
 			memory_mode = true;
 		}
 		else {
-			GLib.stdout.printf("Usage:\n -gtk\tadd this for gtk notify window output instead of standart libnotify\n -memory-cache cache whole databae into memory (needs ca 80MB ram), mitght be faster for very slow harddrive\n");
+			GLib.stdout.printf("Usage:\n -gtk\tadd this for gtk notify window output instead of standard libnotify\n -memory-cache cache whole databae into memory (needs ca 80MB ram), mitght be faster for very slow harddrive\n");
 			return 0;
 		}
 
